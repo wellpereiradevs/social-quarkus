@@ -1,9 +1,11 @@
 package io.github.wellpereiradevs.quarkussocial.rest;
 
 import io.github.wellpereiradevs.quarkussocial.domain.model.User;
+import io.github.wellpereiradevs.quarkussocial.domain.model.domain.model.repository.UserRepository;
 import io.github.wellpereiradevs.quarkussocial.rest.dto.CreateUserRequest;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -15,6 +17,13 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
+    private UserRepository repository;
+
+    @Inject
+    public UserResource(UserRepository repository) {
+        this.repository = repository;
+    }
+
     @POST
     @Transactional
     public Response createUser(CreateUserRequest userRequest) {
@@ -23,14 +32,14 @@ public class UserResource {
         user.setAge(userRequest.getAge());
         user.setName(userRequest.getName());
 
-        user.persist();
+        repository.persist(user);
 
         return Response.ok(user).build();
     }
 
     @GET
     public Response listAllUsers() {
-        PanacheQuery<User> query = User.findAll();
+        PanacheQuery<User> query = repository.findAll();
         return Response.ok(query.list()).build();
     }
 
@@ -39,10 +48,10 @@ public class UserResource {
     @Transactional
     public Response deleteUser(@PathParam("id") Long id) {
 
-        User user = User.findById(id);
+        User user = repository.findById(id);
 
         if (user != null) {
-            user.delete();
+            repository.delete(user);
             return Response.ok().build();
         }
         return Response.status(Response.Status.NOT_FOUND).build();
@@ -53,7 +62,7 @@ public class UserResource {
     @Transactional
     public Response updateUser(@PathParam("id") Long id, CreateUserRequest userData) {
 
-        User user = User.findById(id);
+        User user = repository.findById(id);
 
         if (user != null) {
             user.setName(userData.getName());
