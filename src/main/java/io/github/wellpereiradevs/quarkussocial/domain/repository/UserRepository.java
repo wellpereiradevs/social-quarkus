@@ -1,4 +1,4 @@
-package io.github.wellpereiradevs.quarkussocial.domain.model.domain.model.repository;
+package io.github.wellpereiradevs.quarkussocial.domain.repository;
 
 import io.github.wellpereiradevs.quarkussocial.domain.model.User;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;

@@ -1,7 +1,5 @@
 package io.github.wellpereiradevs.quarkussocial.domain.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-
 import javax.persistence.*;
 import java.util.Objects;
 

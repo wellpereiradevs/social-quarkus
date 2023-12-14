@@ -1,8 +1,9 @@
 package io.github.wellpereiradevs.quarkussocial.rest;
 
 import io.github.wellpereiradevs.quarkussocial.domain.model.User;
-import io.github.wellpereiradevs.quarkussocial.domain.model.domain.model.repository.UserRepository;
+import io.github.wellpereiradevs.quarkussocial.domain.repository.UserRepository;
 import io.github.wellpereiradevs.quarkussocial.rest.dto.CreateUserRequest;
+import io.github.wellpereiradevs.quarkussocial.rest.dto.ResponseError;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 
 import javax.inject.Inject;
@@ -36,9 +37,8 @@ public class UserResource {
         Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(userRequest);
 
         if (!violations.isEmpty()) {
-            ConstraintViolation<CreateUserRequest> error = violations.stream().findAny().get();
-            String errorMessage = error.getMessage();
-            return Response.status(400).entity(errorMessage).build();
+            ResponseError responseError = ResponseError.createFromValidation(violations);
+            return Response.status(400).entity(responseError).build();
         }
 
         User user = new User();
