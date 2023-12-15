@@ -28,6 +28,13 @@ public class FollowerResource {
     @PUT
     @Transactional
     public Response followUser(@PathParam("userId") Long userId, CreateFollowerRequest followerRequest) {
+
+        if (userId.equals(followerRequest.getFollowerId())) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity("You can't follow yourself")
+                    .build();
+        }
+
         var user = userRepository.findById(userId);
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
