@@ -2,6 +2,7 @@ package io.github.wellpereiradevs.quarkussocial.rest;
 
 import io.github.wellpereiradevs.quarkussocial.domain.model.Post;
 import io.github.wellpereiradevs.quarkussocial.domain.model.User;
+import io.github.wellpereiradevs.quarkussocial.domain.repository.FollowerRepository;
 import io.github.wellpereiradevs.quarkussocial.domain.repository.PostRepository;
 import io.github.wellpereiradevs.quarkussocial.domain.repository.UserRepository;
 import io.github.wellpereiradevs.quarkussocial.rest.dto.CreatePostRequest;
@@ -22,6 +23,7 @@ public class PostResource {
 
     private UserRepository userRepository;
     private PostRepository postRepository;
+    private FollowerRepository followerRepository;
 
     @Inject
     public PostResource(UserRepository userRepository, PostRepository postRepository) {
@@ -47,11 +49,34 @@ public class PostResource {
     }
 
     @GET
-    public Response listPost(@PathParam("userId") Long userId) {
+    public Response listPost(@PathParam("userId") Long userId, @HeaderParam("followerId") Long followerId) {
         User user = userRepository.findById(userId);
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        if (followerId == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("You forgot the header: followerId")
+                    .build();
+        }
+
+        User follower = userRepository.findById(followerId);
+
+        if (follower == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Nonexistent followerId")
+                    .build();
+        }
+
+        boolean follows = followerRepository.follows(follower, user);
+
+        if (!follows) {
+            return Response.status(Response.Status.FORBIDDEN)
+                    .entity("You can't see these posts.")
+                    .build();
+        }
+
 
         var query = postRepository.find("user", Sort.by("dateTime", Sort.Direction.Descending) , user);
         var list = query.list();
