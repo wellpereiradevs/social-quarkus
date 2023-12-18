@@ -51,4 +51,22 @@ class PostResourceTest {
                 .then()
                 .statusCode(201);
     }
+
+    @Test
+    @DisplayName("should return 404 when trying to make a post for an nonexistent user")
+    public void postForAnNonexistentUserTest(){
+        var postRequest = new CreatePostRequest();
+        postRequest.setText("Some text");
+
+        var nonexistentUserId = 999;
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(postRequest)
+                .pathParam("userId", nonexistentUserId)
+                .when()
+                .post()
+                .then()
+                .statusCode(404);
+    }
 }
