@@ -1,0 +1,30 @@
+[33m9b4d9c4[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33mab741fb[m HEAD@{1}: reset: moving to HEAD^
+[33mf94472d[m HEAD@{2}: commit: Performing Ordered Tests
+[33mab741fb[m HEAD@{3}: reset: moving to HEAD^
+[33mef4a776[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{4}: commit (merge): Performing Ordered Tests
+[33mab741fb[m HEAD@{5}: commit: Performing Ordered Tests
+[33m9b4d9c4[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m HEAD@{6}: commit: Setting up the environment for testing
+[33m18a78d3[m HEAD@{7}: commit: Restricting access to posts
+[33m2866fec[m HEAD@{8}: commit: Implementing the Unfollow a User Method
+[33m02da9e2[m HEAD@{9}: commit: Implementing Get Followers
+[33m4c25cc0[m HEAD@{10}: commit: Avoiding Users Conflict
+[33meae3310[m HEAD@{11}: commit: Completing the followers PUT
+[33m5108a70[m HEAD@{12}: commit: Implementing the Method of Following a User
+[33m74ca026[m HEAD@{13}: commit: Creating the followers table and the classes needed for the API
+[33m85a03b4[m HEAD@{14}: commit: Completing the Posts API
+[33m31374f7[m HEAD@{15}: commit: Implementing the Method of Posting
+[33m446ef57[m HEAD@{16}: commit: Creating the Posts Resource and Endpoints
+[33md734288[m HEAD@{17}: commit: Avoiding boilerplate code with the Lombok project
+[33m73e2c54[m HEAD@{18}: commit: Changing Status Codes to More Specific Ones
+[33mc935438[m HEAD@{19}: commit: Returning a Standard Error Object
+[33m0f80cf6[m HEAD@{20}: commit: Applying Validations with Hibernate Validator (Beans Validations)
+[33m7253226[m HEAD@{21}: commit: Using Panache repositories
+[33mdd37624[m HEAD@{22}: commit: Completing CRUD Operations
+[33m83c5624[m HEAD@{23}: commit: Manipulating Entities with Panache Entity
+[33m63074c4[m HEAD@{24}: commit: Users Entity Mapping
+[33mc57091c[m HEAD@{25}: commit: Users Table and Connection Configuration
+[33m7975fad[m HEAD@{26}: commit: Receiving and Returning JSON Objects
+[33mae1a2f3[m HEAD@{27}: commit: POST Users
+[33m2b2da4e[m HEAD@{28}: Branch: renamed refs/heads/master to refs/heads/main
+[33m2b2da4e[m HEAD@{30}: commit (initial): Project Created
