@@ -6,6 +6,8 @@ import io.github.wellpereiradevs.quarkussocial.rest.dto.CreatePostRequest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,6 @@ class PostResourceTest {
 
     @Inject
     UserRepository userRepository;
-
     Long userId;
 
     @BeforeEach
@@ -73,19 +74,39 @@ class PostResourceTest {
     @Test
     @DisplayName("should return 404 when user doesn't exist")
     public void listPostUserNotFoundTest() {
-
+        var nonexistentUserId = 999;
+        given()
+                .pathParam("userId", nonexistentUserId)
+                .when()
+                .get()
+                .then()
+                .statusCode(404);
     }
 
     @Test
-    @DisplayName("should return 400 when follower Id is not present")
+    @DisplayName("should return 400 when followerId is not present")
     public void listPostFollowerHeaderNotSendTest() {
-
+        given()
+                .pathParam("userId", userId)
+                .when()
+                .get()
+                .then()
+                .statusCode(400)
+                .body(Matchers.is("You forgot the header: followerId"));
     }
 
     @Test
     @DisplayName("should return 400 when follower doesn't exist")
     public void listPostFollowerNotFoundTest() {
-
+        var NonexistentFollowerId = 999;
+        given()
+                .pathParam("userId", userId)
+                .header("followerId", NonexistentFollowerId)
+                .when()
+                .get()
+                .then()
+                .statusCode(400)
+                .body(Matchers.is("Nonexistent followerId"));
     }
 
     @Test
