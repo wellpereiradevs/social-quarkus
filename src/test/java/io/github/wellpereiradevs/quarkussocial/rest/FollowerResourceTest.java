@@ -26,6 +26,7 @@ class FollowerResourceTest {
     UserRepository userRepository;
 
     Long userId;
+    Long followerId;
 
     @BeforeEach
     @Transactional
@@ -36,6 +37,13 @@ class FollowerResourceTest {
         user.setName("Fulano");
         userRepository.persist(user);
         userId = user.getId();
+
+        //Follower
+        var follower = new User();
+        follower.setAge(30);
+        follower.setName("Fulano");
+        userRepository.persist(follower);
+        followerId = follower.getId();
     }
 
     @Test
@@ -73,5 +81,22 @@ class FollowerResourceTest {
                 .put()
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("should return 404 when userId doesn't exist")
+    public void followUserTest(){
+
+        var body = new CreateFollowerRequest();
+        body.setFollowerId(followerId);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(body)
+                .pathParam("userId", userId)
+                .when()
+                .put()
+                .then()
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 }
