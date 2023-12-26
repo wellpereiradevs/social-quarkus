@@ -1,6 +1,10 @@
 package io.github.wellpereiradevs.quarkussocial.rest;
 
+import io.github.wellpereiradevs.quarkussocial.domain.model.Follower;
+import io.github.wellpereiradevs.quarkussocial.domain.model.Post;
 import io.github.wellpereiradevs.quarkussocial.domain.model.User;
+import io.github.wellpereiradevs.quarkussocial.domain.repository.FollowerRepository;
+import io.github.wellpereiradevs.quarkussocial.domain.repository.PostRepository;
 import io.github.wellpereiradevs.quarkussocial.domain.repository.UserRepository;
 import io.github.wellpereiradevs.quarkussocial.rest.dto.CreatePostRequest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -25,15 +29,51 @@ class PostResourceTest {
 
     @Inject
     UserRepository userRepository;
+
+    @Inject
+    FollowerRepository followerRepository;
+
+    @Inject
+    PostRepository postRepository;
+
     Long userId;
+    Long userNotFollowerId;
+    Long userFollowerId;
 
     @BeforeEach
     public void setUP() {
+
+        //Standard test user
         var user = new User();
         user.setAge(30);
         user.setName("Fulano");
         userRepository.persist(user);
         userId = user.getId();
+
+        //Post created for the user
+        Post post = new Post();
+        post.setText("Hello");
+        post.setUser(user);
+        postRepository.persist(post);
+
+        //User who doesn't follow anyone
+        var userNotFollower = new User();
+        userNotFollower.setAge(33);
+        userNotFollower.setName("Ciclano");
+        userRepository.persist(userNotFollower);
+        userNotFollowerId = userNotFollower.getId();
+
+        //Follower user
+        var userFollower = new User();
+        userFollower.setAge(31);
+        userFollower.setName("Beltrano");
+        userRepository.persist(userFollower);
+        userFollowerId = userFollower.getId();
+
+        Follower follower = new Follower();
+        follower.setUser(user);
+        follower.setFollower(userFollower);
+        followerRepository.persist(follower);
     }
 
     @Test
@@ -95,13 +135,14 @@ class PostResourceTest {
                 .body(Matchers.is("You forgot the header: followerId"));
     }
 
+
     @Test
     @DisplayName("should return 400 when follower doesn't exist")
     public void listPostFollowerNotFoundTest() {
-        var NonexistentFollowerId = 999;
+        var nonexistentFollowerId = 999;
         given()
                 .pathParam("userId", userId)
-                .header("followerId", NonexistentFollowerId)
+                .header("followerId", nonexistentFollowerId)
                 .when()
                 .get()
                 .then()
@@ -110,14 +151,28 @@ class PostResourceTest {
     }
 
     @Test
-    @DisplayName("should return 403 when follower isn't a follower")
-    public void listPostNotAFollowerNotFoundTest() {
-
+    @DisplayName("should return 403 when follower ins't a follower")
+    public void listPostNotAFollower() {
+        given()
+                .pathParam("userId", userId)
+                .header("followerId", userNotFollowerId)
+                .when()
+                .get()
+                .then()
+                .statusCode(403)
+                .body(Matchers.is("You can't see these posts."));
     }
 
     @Test
-    @DisplayName("should return posts")
+    @DisplayName("should list posts")
     public void listPostsTest() {
-
+        given()
+                .pathParam("userId", userId)
+                .header("followerId", userFollowerId)
+                .when()
+                .get()
+                .then()
+                .statusCode(200)
+                .body("size()", Matchers.is(1));
     }
 }
